@@ -315,7 +315,10 @@ const Sidebar = () => {
             }}
           >
             <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.text} />
+            <ListItemText primary={item.text} 
+            primaryTypographyProps={{
+              sx: { fontFamily: "Poppins", fontSize: "19px" },
+            }}/>
           </ListItemButton>
         ))}
       </List>

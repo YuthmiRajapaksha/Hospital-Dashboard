@@ -9,8 +9,9 @@ import AddLabReports from "./Pages/LabReports/AddLabReports"; // Import AddLabRe
 import Login from "./Pages/Login/Login"; // Import Login
 import DoctorsDetails from "./Pages/Doctors/Doctors";
 import AddDoctor from "./Pages/Doctors/AddDoctor";
-import AdminDashboard from "./components/AdminDashboard";
-import UserDashboard from "./components/UserDashboard";
+import AutoLogout from "./components/AutoLogout";
+// import AdminDashboard from "./components/AdminDashboard";
+// import UserDashboard from "./components/UserDashboard";
 import { Box } from "@mui/material"; // Import Box from MUI
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
   const [lastId, setLastId] = useState(0);
 
   return (
+    <AutoLogout>
     <Box display="flex">
       {/* Only show Sidebar and Navbar if we're not on the Login page */}
       {location.pathname !== "/" && (
@@ -55,6 +57,7 @@ function App() {
         </Box>
       )}
     </Box>
+    </AutoLogout>
   );
 }
 
