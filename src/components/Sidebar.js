@@ -143,6 +143,94 @@
 
 // export default Sidebar;
 
+// import React from "react";
+// import { Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, Box } from "@mui/material";
+// import { Link, useLocation } from "react-router-dom";
+// import DashboardIcon from "@mui/icons-material/Dashboard";
+// import EventNoteIcon from "@mui/icons-material/EventNote";
+// import DescriptionIcon from "@mui/icons-material/Description";
+// import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
+// import PaymentIcon from "@mui/icons-material/Payment";
+// import SettingsIcon from "@mui/icons-material/Settings";
+
+// // Define the menu items with corresponding paths
+// const menuItems = [
+//   { text: "Home", icon: <DashboardIcon />, path: "/home" },
+//   { text: "Appointments", icon: <EventNoteIcon />, path: "/appointments" },
+//   { text: "Lab Reports", icon: <DescriptionIcon />, path: "/lab-reports" },
+//   { text: "Doctors", icon: <LocalHospitalIcon />, path: "/doctors" },
+//   { text: "Payments", icon: <PaymentIcon />, path: "/payments" },
+//   { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
+// ];
+
+// const Sidebar = () => {
+//   const location = useLocation(); // Get the current location
+
+//   return (
+//     <Drawer
+//       variant="permanent"
+//       sx={{
+//         width: 240,
+//         flexShrink: 0,
+//         "& .MuiDrawer-paper": {
+//           width: 240,
+//           boxSizing: "border-box",
+//           backgroundColor: "#EDECEC", // Light grey background
+//           boxShadow: 5,
+//         },
+//       }}
+//     >
+//       <Toolbar >
+//         <Box
+//           display="flex"
+//           flexDirection="column"
+//           justifyContent="flex-start"
+//           alignItems="center"
+//           sx={{ height: "100%", mt: "100px" }}
+//         >
+
+//           {/* Logo Image */}
+//           <img
+//             src="/image/Logo7.png" // Replace with your logo path
+//             alt="MediCare Logo"
+//             style={{ width: "70px", height: "70px", marginRight: "10px", borderRadius: "50%", objectFit: "cover" }}
+//           />
+//           <Typography variant="h5" fontWeight="bold" sx={{ fontFamily: "Cursive", color: "black" }}>
+//             MediCare
+//           </Typography>
+//           <Typography variant="h6" fontWeight="bold" sx={{ fontFamily: "Cursive", color: "#2B909B" }}>
+//             Hospitals
+//           </Typography>
+//         </Box>
+//       </Toolbar>
+
+//       <List>
+//         {menuItems.map((item, index) => (
+//           <ListItemButton
+//             component={Link}
+//             to={item.path}
+//             key={index}
+//             sx={{
+//               backgroundColor: location.pathname === item.path ? "#B0E0E6" : "transparent", // Active background
+//               "&:hover": {
+//                 backgroundColor: "#B0E0E6", // Hover background
+//               },
+//             }}
+//           >
+//             <ListItemIcon>{item.icon}</ListItemIcon>
+//             <ListItemText primary={item.text} />
+//           </ListItemButton>
+//         ))}
+//       </List>
+//     </Drawer>
+//   );
+// };
+
+// export default Sidebar;
+
+
+
+
 import React from "react";
 import { Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, Box } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
@@ -153,18 +241,22 @@ import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import PaymentIcon from "@mui/icons-material/Payment";
 import SettingsIcon from "@mui/icons-material/Settings";
 
-// Define the menu items with corresponding paths
+// Menu items with paths and required roles
 const menuItems = [
-  { text: "Home", icon: <DashboardIcon />, path: "/home" },
-  { text: "Appointments", icon: <EventNoteIcon />, path: "/appointments" },
-  { text: "Lab Reports", icon: <DescriptionIcon />, path: "/lab-reports" },
-  { text: "Doctors", icon: <LocalHospitalIcon />, path: "/doctors" },
-  { text: "Payments", icon: <PaymentIcon />, path: "/payments" },
-  { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
+  { text: "Home", icon: <DashboardIcon />, path: "/home", roles: ["admin", "user"] },
+  { text: "Appointments", icon: <EventNoteIcon />, path: "/appointments", roles: ["admin"] },
+  { text: "Lab Reports", icon: <DescriptionIcon />, path: "/lab-reports", roles: ["admin"] },
+  { text: "Doctors", icon: <LocalHospitalIcon />, path: "/doctors", roles: ["admin", "user"] },
+  { text: "Payments", icon: <PaymentIcon />, path: "/payments", roles: ["admin"] },
+  { text: "Settings", icon: <SettingsIcon />, path: "/settings", roles: ["admin", "user"] },
 ];
 
 const Sidebar = () => {
-  const location = useLocation(); // Get the current location
+  const location = useLocation();
+  const userRole = localStorage.getItem("role"); // Get user role
+
+  // Filter menu items based on the user's role
+  const visibleItems = menuItems.filter((item) => item.roles.includes(userRole));
 
   return (
     <Drawer
@@ -180,7 +272,7 @@ const Sidebar = () => {
         },
       }}
     >
-      <Toolbar >
+      <Toolbar>
         <Box
           display="flex"
           flexDirection="column"
@@ -188,12 +280,17 @@ const Sidebar = () => {
           alignItems="center"
           sx={{ height: "100%", mt: "100px" }}
         >
-
           {/* Logo Image */}
           <img
-            src="/image/Logo7.png" // Replace with your logo path
+            src="/image/Logo7.png"
             alt="MediCare Logo"
-            style={{ width: "70px", height: "70px", marginRight: "10px", borderRadius: "50%", objectFit: "cover" }}
+            style={{
+              width: "70px",
+              height: "70px",
+              marginRight: "10px",
+              borderRadius: "50%",
+              objectFit: "cover",
+            }}
           />
           <Typography variant="h5" fontWeight="bold" sx={{ fontFamily: "Cursive", color: "black" }}>
             MediCare
@@ -205,15 +302,15 @@ const Sidebar = () => {
       </Toolbar>
 
       <List>
-        {menuItems.map((item, index) => (
+        {visibleItems.map((item, index) => (
           <ListItemButton
             component={Link}
             to={item.path}
             key={index}
             sx={{
-              backgroundColor: location.pathname === item.path ? "#B0E0E6" : "transparent", // Active background
+              backgroundColor: location.pathname === item.path ? "#B0E0E6" : "transparent",
               "&:hover": {
-                backgroundColor: "#B0E0E6", // Hover background
+                backgroundColor: "#B0E0E6",
               },
             }}
           >
@@ -227,6 +324,7 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
 
 
 
