@@ -10,6 +10,7 @@ import Login from "./Pages/Login/Login"; // Import Login
 import DoctorsDetails from "./Pages/Doctors/Doctors";
 import AddDoctor from "./Pages/Doctors/AddDoctor";
 import AutoLogout from "./components/AutoLogout";
+import Profile from "./Pages/Profile/Profile";
 // import AdminDashboard from "./components/AdminDashboard";
 // import UserDashboard from "./components/UserDashboard";
 import { Box } from "@mui/material"; // Import Box from MUI
@@ -40,6 +41,7 @@ function App() {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/doctors" element={<DoctorsDetails />} />
                 <Route path="/add-doctor" element={<AddDoctor />} />
+                <Route path="/profile" element={<Profile />} />
                 {/* <Route path="/admin-dashboard" element={<AdminDashboard />} />
                 <Route path="/user-dashboard" element={<UserDashboard />} /> */}
               </Routes>

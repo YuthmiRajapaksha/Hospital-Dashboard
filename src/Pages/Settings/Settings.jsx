@@ -26,11 +26,11 @@ const Settings = () => {
 
   return (
     <Container maxWidth="sm">
-      <Box textAlign="center" mt={9}>
+      <Box textAlign="center" mt={12}>
         <Typography variant="h4" fontWeight="bold" gutterBottom sx={{fontFamily:"Poppins"}}>SETTINGS</Typography>
         <Typography variant="h6" gutterBottom>CHANGE PASSWORD</Typography>
         <Typography variant="body2" mb={3}>
-          Your password must be at least 6 characters and should include a combination of numbers, letters and special characters (!$@%).
+          Your password must be at least 6 characters and should include a combination of numbers, letters and special characters (!$@%)
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField

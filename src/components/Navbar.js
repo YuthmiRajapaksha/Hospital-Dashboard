@@ -112,6 +112,7 @@ const Navbar = () => {
   // Handle menu close
   const handleMenuClose = () => {
     setAnchorEl(null);
+    navigate('/profile');
   };
 
   const handleLogout = () => {

@@ -783,86 +783,236 @@
 
 // export default AddLabReports;
 
+// import React, { useState } from "react";
+// import { Box, Button, TextField, Typography, Grid, Paper,FormControl,InputLabel,Select,MenuItem , Autocomplete} from "@mui/material";
+// import { v4 as uuidv4 } from "uuid";
+// import { useNavigate } from "react-router-dom";
+
+
+// const AddLabReports = ({ setLabReportsData, lastId, setLastId }) => {
+//   const [referenceNumber] = useState(`REF-${uuidv4()}`);
+//   const [patientName, setPatientName] = useState("");
+//   const [testName, setTestName] = useState("");
+//   const [date, setDate] = useState(new Date());
+//   const [status, setStatus] = useState("");
+//   const navigate = useNavigate();
+
+//   const handleSubmit = () => {
+//     // Generate new ID and reference number
+//     const newId = lastId + 1; // Increment the ID by 1
+//     const newReferenceNumber = `REF-${newId}`; // Simple reference number
+    
+
+//     const newReport = {
+//       id: newId, // Generate a unique ID
+//       referenceNumber: newReferenceNumber,
+//       patientName,
+//       referenceNumber,
+//       testName,
+//       date,
+//       status,
+//     };
+
+//     // Use setLabReportsData to update the lab reports list
+//     setLabReportsData((prevData) => [...prevData, newReport]);
+//     setLastId(newId); // Update the lastId state to the new ID
+//     navigate("/lab-reports"); // Redirect after save
+//   };
+
+//   return (
+//     <Box display="flex" justifyContent="center" mt={10}>
+//       <Paper sx={{ padding: 4, width: '550px', textAlign: "center", boxShadow:10 }}>
+//         <Typography variant="h5" sx={{ fontFamily: "Poppins" }} fontWeight="bold" mb={3}>
+//           Add Lab Report
+//         </Typography>
+
+//         <Grid container spacing={3} justifyContent="center">
+//         <Grid item xs={12} sm={8}>
+//               <TextField fullWidth label="Reference Number" variant="outlined" value={referenceNumber} disabled />
+//             </Grid>
+//           <Grid item xs={12} sm={8}>
+//             <TextField
+//               fullWidth
+//               // sx={{ width: '370px' }}
+//               label="Patient Name"
+//               value={patientName}
+//               onChange={(e) => setPatientName(e.target.value)}
+//             />
+//           </Grid>
+
+          
+//           {/* <Grid item xs={12} sm={8}>
+//                 <FormControl fullWidth>
+//                   <InputLabel>Test Name</InputLabel>
+//                   <Select
+//                     value={testName}
+//                     onChange={(e) => setTestName(e.target.value)}
+//                     label="Test Name"
+//                   >
+//                     <MenuItem value="X-Ray">X-Ray</MenuItem>
+//                     <MenuItem value="Blood Test">Blood Test</MenuItem>
+//                   </Select>
+//                 </FormControl>
+//               </Grid> */}
+
+// <Grid item xs={12} sm={8}>
+//             <FormControl fullWidth>
+//               {/* <InputLabel>Test Name</InputLabel> */}
+//               <Autocomplete
+//                 value={testName}
+//                 onChange={(e, newValue) => setTestName(newValue)} // Update the testName state with selected or typed value
+//                 options={["X-Ray", "Blood Test", "Ultrasound", "MRI","B"]} // List of test names
+//                 renderInput={(params) => <TextField {...params} label="Test Name" />}
+//                 freeSolo // Allow free typing along with dropdown
+//               />
+//             </FormControl>
+//           </Grid>
+
+//           <Grid item xs={12} sm={8}>
+//             <TextField
+//               fullWidth
+//               label="Date"
+//               type="date"
+//               value={date}
+//               onChange={(e) => setDate(e.target.value)}
+//               InputLabelProps={{ shrink: true }}
+//             />
+//           </Grid>
+//           <Grid item xs={12} sm={8}>
+//               <FormControl fullWidth>
+//                 <InputLabel>Status</InputLabel>
+//                 <Select value={status} onChange={(e) => setStatus(e.target.value)} label="Status">
+//                   <MenuItem value="Pending">Pending</MenuItem>
+//                   <MenuItem value="Completed">Completed</MenuItem>
+//                 </Select>
+//               </FormControl>
+//             </Grid>
+
+//           <Grid item xs={12} sm={8} display="flex" justifyContent="center" gap={10} mt={3}>
+//             <Button variant="outlined" 
+//             sx={{ 
+//                 width: "100px", 
+//                 color: "#2B909B",  
+//                 backgroundColor: "white", 
+//                 border:"2px solid #2B909B",
+//                 borderColor: "#2B909B", 
+//                 "&:hover": {
+//                   backgroundColor: "#E0F7FA",
+//                   borderColor: "#2B909B",
+//                 }
+//               }} 
+//               onClick={() => {
+//                 setPatientName("");
+//                 setTestName("");
+//                 setDate(new Date());
+//                 setStatus("");
+//               }}>
+//               RESET
+//             </Button>
+//             <Button variant="contained" 
+//             sx={{ backgroundColor: "#2B909B", width: "100px" }} 
+//             onClick={() => navigate("/lab-reports")}>
+//               SAVE
+//             </Button>
+//           </Grid>
+//         </Grid>
+//       </Paper>
+//     </Box>
+//   );
+// };
+
+// export default AddLabReports;
+
+
+
 import React, { useState } from "react";
-import { Box, Button, TextField, Typography, Grid, Paper,FormControl,InputLabel,Select,MenuItem , Autocomplete} from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Grid,
+  Paper,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Autocomplete,
+} from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const AddLabReports = ({ setLabReportsData, lastId, setLastId }) => {
+const AddLabReports = () => {
   const [referenceNumber] = useState(`REF-${uuidv4()}`);
   const [patientName, setPatientName] = useState("");
   const [testName, setTestName] = useState("");
-  const [date, setDate] = useState(new Date());
-  const [status, setStatus] = useState("");
+  const [date, setDate] = useState("");
+  const [status, setStatus] = useState("Pending");
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    // Generate new ID and reference number
-    const newId = lastId + 1; // Increment the ID by 1
-    const newReferenceNumber = `REF-${newId}`; // Simple reference number
-    
+  const handleSubmit = async () => {
+    if (!patientName || !testName || !date || !status) {
+      alert("Please fill in all fields.");
+      return;
+    }
 
     const newReport = {
-      id: newId, // Generate a unique ID
-      referenceNumber: newReferenceNumber,
-      patientName,
-      referenceNumber,
-      testName,
-      date,
+      reference_number: referenceNumber,
+      patient_name: patientName,
+      test_name: testName,
+      report_date: date,
       status,
     };
+    
+  console.log("Sending data:", newReport); // Log the data being sent
 
-    // Use setLabReportsData to update the lab reports list
-    setLabReportsData((prevData) => [...prevData, newReport]);
-    setLastId(newId); // Update the lastId state to the new ID
-    navigate("/lab-reports"); // Redirect after save
+    try {
+      await axios.post("http://localhost:3000/api/lab-reports/add", newReport);
+      alert("Lab report added successfully!");
+      navigate("/lab-reports"); // Navigate to another page after successful submission
+    } catch (error) {
+      console.error("Error saving lab report:", error);
+      alert("Failed to save lab report.");
+    }
+  };
+
+  const handleReset = () => {
+    setPatientName("");
+    setTestName("");
+    setDate("");
+    setStatus("");
   };
 
   return (
-    <Box display="flex" justifyContent="center" mt={5}>
-      <Paper sx={{ padding: 4, width: '550px', textAlign: "center", boxShadow:10 }}>
-        <Typography variant="h5" sx={{ fontFamily: "Poppins" }} fontWeight="bold" mb={3}>
+    <Box display="flex" justifyContent="center" mt={10}>
+      <Paper sx={{ padding: 4, width: "550px", textAlign: "center", boxShadow: 10 }}>
+        <Typography variant="h5" fontWeight="bold" mb={3} sx={{ fontFamily: "Poppins" }}>
           Add Lab Report
         </Typography>
 
         <Grid container spacing={3} justifyContent="center">
-        <Grid item xs={12} sm={8}>
-              <TextField fullWidth label="Reference Number" variant="outlined" value={referenceNumber} disabled />
-            </Grid>
+          <Grid item xs={12} sm={8}>
+            <TextField fullWidth label="Reference Number" value={referenceNumber} disabled />
+          </Grid>
+
           <Grid item xs={12} sm={8}>
             <TextField
               fullWidth
-              // sx={{ width: '370px' }}
               label="Patient Name"
               value={patientName}
               onChange={(e) => setPatientName(e.target.value)}
             />
           </Grid>
 
-          
-          {/* <Grid item xs={12} sm={8}>
-                <FormControl fullWidth>
-                  <InputLabel>Test Name</InputLabel>
-                  <Select
-                    value={testName}
-                    onChange={(e) => setTestName(e.target.value)}
-                    label="Test Name"
-                  >
-                    <MenuItem value="X-Ray">X-Ray</MenuItem>
-                    <MenuItem value="Blood Test">Blood Test</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid> */}
-
-<Grid item xs={12} sm={8}>
+          <Grid item xs={12} sm={8}>
             <FormControl fullWidth>
-              {/* <InputLabel>Test Name</InputLabel> */}
               <Autocomplete
                 value={testName}
-                onChange={(e, newValue) => setTestName(newValue)} // Update the testName state with selected or typed value
-                options={["X-Ray", "Blood Test", "Ultrasound", "MRI","B"]} // List of test names
+                onChange={(e, newValue) => setTestName(newValue)}
+                options={["X-Ray", "Blood Test", "Ultrasound", "MRI", "CT Scan"]}
                 renderInput={(params) => <TextField {...params} label="Test Name" />}
-                freeSolo // Allow free typing along with dropdown
+                freeSolo
               />
             </FormControl>
           </Grid>
@@ -877,40 +1027,40 @@ const AddLabReports = ({ setLabReportsData, lastId, setLastId }) => {
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
+
           <Grid item xs={12} sm={8}>
-              <FormControl fullWidth>
-                <InputLabel>Status</InputLabel>
-                <Select value={status} onChange={(e) => setStatus(e.target.value)} label="Status">
-                  <MenuItem value="Pending">Pending</MenuItem>
-                  <MenuItem value="Completed">Completed</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+            <FormControl fullWidth>
+              <InputLabel>Status</InputLabel>
+              <Select value={status} onChange={(e) => setStatus(e.target.value)}>
+                <MenuItem value="Pending">Pending</MenuItem>
+                <MenuItem value="In Progress">In Progress</MenuItem>
+                <MenuItem value="Completed">Completed</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
 
           <Grid item xs={12} sm={8} display="flex" justifyContent="center" gap={10} mt={3}>
-            <Button variant="outlined" 
-            sx={{ 
-                width: "100px", 
-                color: "#2B909B",  
-                backgroundColor: "white", 
-                border:"2px solid #2B909B",
-                borderColor: "#2B909B", 
+            <Button
+              variant="outlined"
+              onClick={handleReset}
+              sx={{
+                width: "100px",
+                color: "#2B909B",
+                border: "2px solid #2B909B",
                 "&:hover": {
                   backgroundColor: "#E0F7FA",
                   borderColor: "#2B909B",
-                }
-              }} 
-              onClick={() => {
-                setPatientName("");
-                setTestName("");
-                setDate(new Date());
-                setStatus("");
-              }}>
+                },
+              }}
+            >
               RESET
             </Button>
-            <Button variant="contained" 
-            sx={{ backgroundColor: "#2B909B", width: "100px" }} 
-            onClick={() => navigate("/lab-reports")}>
+
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              sx={{ backgroundColor: "#2B909B", width: "100px" }}
+            >
               SAVE
             </Button>
           </Grid>
@@ -921,7 +1071,5 @@ const AddLabReports = ({ setLabReportsData, lastId, setLastId }) => {
 };
 
 export default AddLabReports;
-
-
 
 

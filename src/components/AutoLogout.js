@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Auto logout time in milliseconds (e.g., 5 minutes)
-const AUTO_LOGOUT_TIME = 1 * 60 * 1000; // 5 minutes
+// Auto logout time in milliseconds (e.g., 10 minutes)
+const AUTO_LOGOUT_TIME = 30 * 60 * 1000; // 30 minutes
 
 const AutoLogout = ({ children }) => {
   const navigate = useNavigate();

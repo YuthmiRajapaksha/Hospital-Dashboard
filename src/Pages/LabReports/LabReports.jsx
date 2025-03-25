@@ -478,6 +478,7 @@ import { useNavigate } from "react-router-dom"; // Import navigate hook
 import Swal from "sweetalert2";
 // import AddLabReports from "./AddLabReports";
 
+
 const LabReports = () => {
   const [labReportsData, setLabReportsData] = useState([]); // Define the state for lab reports data
   const [lastId, setLastId] = useState(0); // Track the last ID used

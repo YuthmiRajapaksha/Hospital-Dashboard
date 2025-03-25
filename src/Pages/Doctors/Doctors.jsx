@@ -161,7 +161,13 @@ const DoctorCards = () => {
       <Box mt={4} display="flex" justifyContent="flex-end">
         <Button
           variant="contained"
-          sx={{ backgroundColor: "#2B909B" }}
+          sx={{ 
+            backgroundColor: "#2B909B",
+            fontWeight: "bold",
+            '&:hover': {
+              backgroundColor: '#4da6a9',
+            },
+           }}
           onClick={() => navigate("/add-doctor")} // Navigate to add doctor page
         >
           Add DOCTOR
