@@ -46,7 +46,8 @@ const AddDoctor = () => {
   };
 
   return (
-    <Box p={4} mt={8} sx={{ border: "1px solid #ccc", borderRadius: "12px", maxWidth: 600, mx: "auto", boxShadow:10 }}>
+    <Box p={4} mt={10} 
+       sx={{ border: "1px solid #ccc", borderRadius: "12px", maxWidth: 600, mx: "auto", boxShadow:10 }}>
       <Typography variant="h4" fontWeight="bold" mb={4} textAlign="center" sx={{  fontFamily:"Poppins" }}>
         Add Doctor
       </Typography>

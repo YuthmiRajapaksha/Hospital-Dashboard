@@ -195,7 +195,7 @@ const Login = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundImage: "url('/image/b2.jpg')",
+        backgroundImage: "url('/image/bb.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -208,7 +208,8 @@ const Login = () => {
             flexDirection: "column",
             alignItems: "center",
             p: 4,
-            backgroundColor: "transparent",
+            // backgroundColor: "transparent",
+             backgroundColor: "rgb(255, 255, 255,0.7)",
             borderRadius: 4,
             boxShadow: 8,
           }}
