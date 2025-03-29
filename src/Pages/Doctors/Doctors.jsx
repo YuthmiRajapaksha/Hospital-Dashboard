@@ -188,6 +188,7 @@ import { Card, CardContent, Button, Typography, Grid, Box } from "@mui/material"
 const DoctorCards = () => {
   const navigate = useNavigate();
   const [doctors, setDoctors] = useState([]);
+  
 
   // Fetch doctors data from the backend when the component mounts
   useEffect(() => {
@@ -217,7 +218,7 @@ const DoctorCards = () => {
             <Card elevation={3} sx={{ textAlign: "center", height: "170px" }}>
               <CardContent>
                 <Typography variant="h6" sx={{ mt: 1, fontFamily: "Poppins" }}>
-                  {doctor.name}
+                {`Dr. ${doctor.name}`}
                 </Typography>
                 <Button
                   variant="contained"
