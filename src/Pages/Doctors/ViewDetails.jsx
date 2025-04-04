@@ -103,7 +103,7 @@ const DoctorDetails = () => {
               variant="contained"
               sx={{
                 width: "100px",
-                backgroundColor: "#FF3D00",
+                backgroundColor: "red",
                 "&:hover": { backgroundColor: "#D32F2F" },
               }}
               onClick={handleDelete}

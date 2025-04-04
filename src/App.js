@@ -12,6 +12,7 @@ import AddDoctor from "./Pages/Doctors/AddDoctor";
 import AutoLogout from "./components/AutoLogout";
 import Profile from "./Pages/Profile/Profile";
 import DoctorDetails from "./Pages/Doctors/ViewDetails";
+import ProtectedRoute from "./components/ProtectedRoute";
 // import AdminDashboard from "./components/AdminDashboard";
 // import UserDashboard from "./components/UserDashboard";
 import { Box } from "@mui/material"; // Import Box from MUI
@@ -44,6 +45,13 @@ function App() {
                 <Route path="/add-doctor" element={<AddDoctor />} />
                 <Route path="/doctor-details/:id" element={<DoctorDetails />} />
                 <Route path="/profile" element={<Profile />} />
+                
+               {/* PROTECTED ROUTES */}
+               <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
+                    {/* <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                    <Route path="/user-dashboard" element={<UserDashboard />} /> */}
+                  </Route>
+
                 {/* <Route path="/admin-dashboard" element={<AdminDashboard />} />
                 <Route path="/user-dashboard" element={<UserDashboard />} /> */}
               </Routes>
@@ -74,155 +82,6 @@ export default function AppWithRouter() {
 }
 
 
-
-
-
-
-// import logo from './logo.svg';
-// import './App.css';
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;
-// import React from "react";
-// import Sidebar from "./components/Sidebar";
-// import Dashboard from "./components/Dashboard";
-// import Navbar from "./components/Navbar";
-// import { Box, CssBaseline } from "@mui/material";
-
-// function App() {
-//   return (
-//     <Router>
-//     <div style={{ display: "flex" }}>
-//         {/* Sidebar */}
-//         <Sidebar />
-        
-//         {/* Main Content */}
-//         <div style={{ flexGrow: 1, padding: "20px" }}>
-//           <Routes>
-//             <Route path="/" element={<Dashboard />} />
-//             <Route path="/appointments" element={<Appointments />} />
-//             <Route path="/payments" element={<Payments />} />
-//             {/* Add more routes as needed */}
-//           </Routes>
-//         </div>
-//       </div>
-//     </Router>
-//   );
-// };
-
-// export default App;
-
-// import React from "react";
-// import React, { useState } from "react";
-// import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-// import Sidebar from "./components/Sidebar"; // Import your Sidebar
-// import Dashboard from "./components/Dashboard";
-// import Navbar from "./components/Navbar"; // Import the corresponding components
-// // import Appointments from "./Appointments";
-// import Settings from "./Pages/Settings/Settings"; 
-// import LabReports from "./Pages/LabReports/LabReports";
-// import AddLabReports from "./Pages/LabReports/AddLabReports";
-// import Login from "./Pages/Login/Login";
-// // import Doctors from "./Doctors";
-// // import Payments from "./Payments";
-// // import Settings from "./Settings";
-// import { useNavigate } from "react-router-dom";
-// import { Box } from "@mui/material";
-
-
-
-
-// const App = () => {
-//   const navigate = useNavigate(); // ✅ Now it's defined
-//   return (
-//     <Router>
-//       <div style={{ display: "flex" }}>
-//         {/* Sidebar */}
-//         <Sidebar />
-//         <Navbar/>
-        
-//         {/* Main Content Area */}
-//         <div style={{ flexGrow: 1, padding: "20px" }}>
-//           <Routes>
-//             <Route path="/" element={<Dashboard />} />
-//             {/* <Route path="/appointments" element={<Appointments />} /> */}
-//             <Route path="/lab-reports" element={<LabReports />} />
-//             <Route path="/add-lab-reports" element={<AddLabReports />} />
-//             {/* <Route path="/doctors" element={<Doctors />} />
-//             <Route path="/payments" element={<Payments />} />
-//             <Route path="/settings" element={<Settings />} /> */}
-//             <Route path="*" element={<h1>404 Page Not Found</h1>} /> {/* Add fallback */}
-//           </Routes>
-//         </div>
-//       </div>
-//     </Router>
-//   );
-// };
-
-// export default App;
-
-// function App() {
-//   const [labReportsData, setLabReportsData] = useState([]);
-//   const [lastId, setLastId] = useState(0);
-//   return (
-//     <Router>
-//       <Box display="flex">
-//         {/* Sidebar (Fixed to the Left) */}
-//         <Sidebar />
-
-//         {/* Main Content Area */}
-//         <Box flex={1} display="flex" flexDirection="column">
-//           {/* Navbar (At the Top) */}
-//           <Navbar />
-
-//           {/* Page Content */}
-//           <Box p={3}>
-//             <Routes>
-//             <Route path="/home" element={<Dashboard />} />
-//               <Route path="/lab-reports" element={<LabReports />} />
-//               <Route path="/add-lab-reports" element={<AddLabReports />} />
-//               <Route path="/settings" element={<Settings />} />
-//               <Route path="/login" element={<Login />} />
-             
-//             </Routes>
-//           </Box>
-//         </Box>
-//       </Box>
-//     </Router>
-//   );
-// }
-
-// export default App;
-
-
- {/* <Route
-          path="/lab-reports"
-          element={<LabReports labReportsData={labReportsData} setLabReportsData={setLabReportsData} />}
-        />
-        <Route
-          path="/add-lab-reports"
-          element={<AddLabReports setLabReportsData={setLabReportsData} lastId={lastId} setLastId={setLastId} />}
-        /> */}
 
 
 
