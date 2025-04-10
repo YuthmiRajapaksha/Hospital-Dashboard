@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Drawer, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography, Box } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
@@ -16,7 +15,7 @@ const menuItems = [
   { text: "Home", icon: <DashboardIcon />, path: "/home", roles: ["admin", "user"] },
   { text: "Appointments", icon: <EventNoteIcon />, path: "/appointments", roles: ["admin"] },
   { text: "Lab Reports", icon: <DescriptionIcon />, path: "/lab-reports", roles: ["admin"] },
-  { text: "Doctors", icon: <LocalHospitalIcon />, path: "/doctors", roles: ["admin"] },
+  { text: "Doctors", icon: <LocalHospitalIcon />, path: "/doctors", roles: ["admin","user"] },
   { text: "Payments", icon: <PaymentIcon />, path: "/payments", roles: ["admin"] },
   { text: "Settings", icon: <SettingsIcon />, path: "/settings", roles: ["admin", "user"] },
 ];

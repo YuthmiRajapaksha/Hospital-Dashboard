@@ -9,7 +9,7 @@ const AddLabReports = () => {
   const navigate = useNavigate();
   
   const [report, setReport] = useState({
-    reference_number: `REF-${uuidv4()}`,  // Generate a default reference number
+    reference_number: `REF-${Date.now()}`,  // Generate a default reference number
     patient_name: "",
     test_name: "",  // Use report.test_name instead of testName
     report_date: "",
@@ -71,7 +71,7 @@ const AddLabReports = () => {
 
   const handleReset = () => {
     setReport({
-      reference_number: `REF-${uuidv4()}`,  // Generate a new reference number on reset
+      reference_number: `REF-${Date.now()}`,  // Generate a new reference number on reset
       patient_name: "",
       test_name: "",  // Reset test_name here
       report_date: "",

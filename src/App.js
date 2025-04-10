@@ -46,6 +46,7 @@ function App() {
                 <Route path="/doctor-details/:id" element={<DoctorDetails />} />
                 <Route path="/profile" element={<Profile />} />
                 
+                
                {/* PROTECTED ROUTES */}
                <Route element={<ProtectedRoute allowedRoles={["admin", "user"]} />}>
                     {/* <Route path="/admin-dashboard" element={<AdminDashboard />} />

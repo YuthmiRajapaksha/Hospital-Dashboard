@@ -15,10 +15,8 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 const AddDoctor = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [showPassword, setShowPassword] = useState(false);
-  const doctorToEdit = location.state || {}; // Get the passed doctor data
+  const doctorToEdit = location.state?.doctor || null;
 
-  // Initial form state
   const initialFormData = {
     id: "",
     name: "",
@@ -32,43 +30,29 @@ const AddDoctor = () => {
     password: "",
   };
 
-  // Form state
   const [formData, setFormData] = useState(initialFormData);
-  const [doctors, setDoctors] = useState([]);
+  const [showPassword, setShowPassword] = useState(false);
 
-  // Pre-fill form if doctorToEdit has data
   useEffect(() => {
-    if (doctorToEdit && Object.keys(doctorToEdit).length > 0) {
+    if (doctorToEdit) {
       setFormData(doctorToEdit);
     }
   }, [doctorToEdit]);
 
-  // Populate form if updating
-  useEffect(() => {
-    if (location.state?.doctor) {
-      setFormData(location.state.doctor);
-    }
-  }, [location.state]);
-
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Toggle password visibility
   const handleTogglePassword = () => {
     setShowPassword((prev) => !prev);
   };
 
-  // Reset form
   const handleReset = () => {
     setFormData(initialFormData);
   };
 
-  // Save or Update form data with validation
   const handleSave = async () => {
-    // Validation checks
     if (
       !formData.name ||
       !formData.specialization ||
@@ -78,104 +62,57 @@ const AddDoctor = () => {
       !formData.email ||
       !formData.contactNumber ||
       !formData.userName ||
-      (!formData.id && !formData.password) // Password required only when adding
+      (!formData.id && !formData.password)
     ) {
       alert("All fields are required!");
       return;
     }
 
-    // Email must end with @gmail.com
     if (!formData.email.endsWith("@gmail.com")) {
       alert("Email must be a Gmail address (example@gmail.com)");
       return;
     }
 
-    // Contact number must be exactly 10 digits
     if (!/^\d{10}$/.test(formData.contactNumber)) {
       alert("Contact number must be exactly 10 digits");
       return;
     }
 
-    console.log("📤 Sending Doctor Data:", formData);
-    const doctorData = { ...formData, role: "user" }; // Assign "user" role
+    const url = formData.id
+      ? `http://localhost:3000/api/doctors/update/${formData.id}`
+      : "http://localhost:3000/api/doctors/add";
+    const method = formData.id ? "PUT" : "POST";
 
     try {
-      const url = formData.id
-        ? `http://localhost:3000/api/doctors/update/${formData.id}`
-        : "http://localhost:3000/api/doctors/add";
-      const method = formData.id ? "PUT" : "POST";
-
-      // const response = await fetch(url, {
-      //   method,
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(formData),
-      // });
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, role: "user" }),
       });
-      
+
       const contentType = response.headers.get("Content-Type");
-      
+
       if (contentType && contentType.includes("application/json")) {
         const result = await response.json();
-        console.log("📩 Server Response:", result);
-      
+
         if (!response.ok) {
           alert(`Error: ${result.message}`);
           return;
         }
-      
+
         alert(`Doctor ${formData.id ? "updated" : "added"} successfully!`);
         handleReset();
-        fetchDoctors();
         navigate("/doctors");
       } else {
-        const errorText = await response.text(); // This handles HTML responses (like error pages)
+        const errorText = await response.text();
         console.error("Error response:", errorText);
         alert("An error occurred while saving the doctor.");
       }
-
-      const result = await response.json();
-      console.log("📩 Server Response:", result);
-
-      if (!response.ok) {
-        alert(`Error: ${result.message}`);
-        return;
-      }
-
-      alert(`Doctor ${formData.id ? "updated" : "added"} successfully!`);
-      handleReset();
-      fetchDoctors();
-      navigate("/doctors");
     } catch (error) {
       console.error("❌ Error saving doctor:", error);
       alert("An error occurred while saving the doctor.");
     }
   };
-
-  // Fetch all doctors from the database
-  const fetchDoctors = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/api/doctors");
-      const data = await response.json();
-
-      if (response.ok) {
-        setDoctors(data.doctors);
-      } else {
-        alert("Error fetching doctors");
-      }
-    } catch (error) {
-      console.error("❌ Error fetching doctors:", error);
-      alert("An error occurred while fetching the doctor list.");
-    }
-  };
-
-  // Fetch doctors on initial load
-  useEffect(() => {
-    fetchDoctors();
-  }, []);
 
   return (
     <Box
@@ -189,23 +126,28 @@ const AddDoctor = () => {
         boxShadow: 10,
       }}
     >
-      <Typography
-        variant="h4"
-        fontWeight="bold"
-        mb={4}
-        textAlign="center"
-        sx={{ fontFamily: "Poppins" }}
-      >
+      <Typography variant="h4" fontWeight="bold" mb={4} textAlign="center">
         {formData.id ? "Update Doctor" : "Add Doctor"}
       </Typography>
 
       <form>
         <Grid container spacing={3}>
-          {["name", "specialization", "workExperience", "qualifications", "address", "email", "contactNumber", "userName"].map((field) => (
+          {[
+            "name",
+            "specialization",
+            "workExperience",
+            "qualifications",
+            "address",
+            "email",
+            "contactNumber",
+            "userName",
+          ].map((field) => (
             <Grid item xs={12} key={field}>
               <TextField
                 fullWidth
-                label={field.replace(/([A-Z])/g, " $1").replace(/^./, str => str.toUpperCase())}
+                label={field
+                  .replace(/([A-Z])/g, " $1")
+                  .replace(/^./, (str) => str.toUpperCase())}
                 name={field}
                 value={formData[field]}
                 onChange={handleChange}
@@ -215,12 +157,11 @@ const AddDoctor = () => {
             </Grid>
           ))}
 
-          {/* Password Field */}
           {!formData.id && (
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Default password"
+                label="Default Password"
                 name="password"
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
@@ -240,13 +181,24 @@ const AddDoctor = () => {
             </Grid>
           )}
 
-          {/* Buttons */}
           <Grid item xs={12}>
             <Box display="flex" justifyContent="center" gap={4}>
-              <Button variant="outlined" sx={{ width: "120px", color: "#2B909B", borderColor: "#2B909B" }} onClick={handleReset}>
+              <Button
+                variant="outlined"
+                sx={{
+                  width: "120px",
+                  color: "#2B909B",
+                  borderColor: "#2B909B",
+                }}
+                onClick={handleReset}
+              >
                 RESET
               </Button>
-              <Button variant="contained" sx={{ width: "120px", backgroundColor: "#2B909B" }} onClick={handleSave}>
+              <Button
+                variant="contained"
+                sx={{ width: "120px", backgroundColor: "#2B909B" }}
+                onClick={handleSave}
+              >
                 {formData.id ? "UPDATE" : "SAVE"}
               </Button>
             </Box>
@@ -258,8 +210,3 @@ const AddDoctor = () => {
 };
 
 export default AddDoctor;
-
-
-
-
-

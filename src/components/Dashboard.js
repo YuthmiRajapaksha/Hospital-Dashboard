@@ -28,7 +28,7 @@ const Dashboard = () => {
                 p: 3,
                 height:120,
                 backgroundColor: "#4da6a9",
-                color: "black",
+                color: "white",
                 textAlign: "center",
                 fontWeight: "bold",
                  mt: 2, // Moves cards further down
