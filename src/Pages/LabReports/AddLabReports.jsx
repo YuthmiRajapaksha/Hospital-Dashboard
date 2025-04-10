@@ -4,6 +4,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { TextField, Button, Box, Typography, Paper, Grid, FormControl, InputLabel, Select, MenuItem, Autocomplete } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";  // Import uuid for generating unique reference number
 
+
+// Capitalize the first letter of each word
+const capitalizeName = (name) => {
+  return name
+  .trim() // ← this trims spaces from both ends — not good for real-time input!
+  .split(/\s+/)
+  .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+  .join(" ");
+};
+
 const AddLabReports = () => {
   const location = useLocation(); // Get the passed state
   const navigate = useNavigate();
@@ -99,6 +109,12 @@ const AddLabReports = () => {
               label="Patient Name"
               value={report.patient_name}
               onChange={(e) => setReport({ ...report, patient_name: e.target.value })}
+              onBlur={(e) =>
+                setReport((prev) => ({
+                  ...prev,
+                  patient_name: capitalizeName(e.target.value),
+                }))
+              }
             />
           </Grid>
 
