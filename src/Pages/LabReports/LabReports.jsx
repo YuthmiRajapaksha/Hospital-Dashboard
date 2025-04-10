@@ -1,10 +1,12 @@
-//workinggggggggggggggggggggggggggggggggggg
+// //workinggggggggggggggggggggggggggggggggggg
 
 import React, { useState, useEffect } from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, Box } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom"; // Import navigate hook
 import Swal from "sweetalert2";
+import { format } from 'date-fns';  // Import the format function
+
 
 // import AddLabReports from "./AddLabReports";
 
@@ -99,7 +101,7 @@ const LabReports = () => {
                   <TableCell>{row.reference_number}</TableCell>
                   <TableCell>{row.patient_name}</TableCell>
                   <TableCell>{row.test_name}</TableCell>
-                  <TableCell>{row.report_date}</TableCell>
+                  <TableCell> {format(new Date(row.report_date), 'dd/MM/yyyy')}</TableCell>
                   <TableCell>{row.status}</TableCell>
                   <TableCell>
                     <Button variant="contained" color="primary" startIcon={<Edit />} sx={{ marginRight: 1 }}  onClick={() => navigate(`/add-lab-reports`, { state: row })} />
@@ -134,6 +136,181 @@ const LabReports = () => {
 };
 
 export default LabReports;
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, Box } from "@mui/material";
+// import { Edit, Delete } from "@mui/icons-material";
+// import { useNavigate } from "react-router-dom"; 
+// import Swal from "sweetalert2";
+// import { format } from 'date-fns';
+// import SummarizeIcon from '@mui/icons-material/Summarize';  // Import icon for total reports
+
+// const LabReports = () => {
+//   const [labReportsData, setLabReportsData] = useState([]);
+//   const [reportSummary, setReportSummary] = useState({
+//     label: "Total Lab Reports",
+//     value: "0",  // Start with 0
+//     date: new Date(),
+//     icon: <SummarizeIcon />,
+//   });
+//   const navigate = useNavigate();
+
+//   // Fetch lab reports data from the backend when the component mounts
+//   useEffect(() => {
+//     const fetchLabReports = async () => {
+//       try {
+//         const response = await fetch('http://localhost:3000/api/lab-reports');
+//         const data = await response.json();
+//         setLabReportsData(data);
+
+//         // Update the report count dynamically
+//         setReportSummary((prevState) => ({
+//           ...prevState,
+//           value: formatCount(data.length),
+//         }));
+//       } catch (error) {
+//         console.error('Error fetching lab reports:', error);
+//       }
+//     };
+
+//     fetchLabReports();
+//   }, []);
+
+//   // Helper function to format the count (e.g., 1.72m, 3.4k)
+//   const formatCount = (count) => {
+//     if (count >= 1000000) {
+//       return `${(count / 1000000).toFixed(2)}m`;
+//     } else if (count >= 1000) {
+//       return `${(count / 1000).toFixed(1)}k`;
+//     }
+//     return count.toString();
+//   };
+
+//   const handleDelete = (id) => {
+//     Swal.fire({
+//       title: "Are you sure?",
+//       text: "This action cannot be undone!",
+//       icon: "warning",
+//       showCancelButton: true,
+//       confirmButtonColor: "#d33",
+//       cancelButtonColor: "#3085d6",
+//       confirmButtonText: "Yes, delete it!",
+//     }).then((result) => {
+//       if (result.isConfirmed) {
+//         fetch(`http://localhost:3000/api/lab-reports/delete/${id}`, {
+//           method: "DELETE",
+//         })
+//         .then((response) => {
+//           if (response.ok) {
+//             setLabReportsData(labReportsData.filter((report) => report.id !== id));
+//             // Update the report count after deletion
+//             setReportSummary((prevState) => ({
+//               ...prevState,
+//               value: formatCount(labReportsData.length - 1),
+//             }));
+//             Swal.fire("Deleted!", "The report has been deleted.", "success");
+//           } else {
+//             Swal.fire("Error!", "Failed to delete the report.", "error");
+//           }
+//         })
+//         .catch((error) => {
+//           console.error("Error deleting report:", error);
+//           Swal.fire("Error!", "Failed to delete the report.", "error");
+//         });
+//       }
+//     });
+//   };
+
+//   return (
+//     <div>
+//       <Box sx={{ textAlign: "center", marginBottom: 5, marginTop: 10 }}>
+//         <Typography variant="h4" sx={{ fontWeight: "bold", color: "black", fontFamily:"Poppins" }}>
+//           Finalized Lab Reports
+//         </Typography>
+//       </Box>
+
+//       <Box sx={{ textAlign: "center", marginBottom: 3 }}>
+//         {/* Display Total Lab Reports */}
+//         <Typography variant="h6">
+//           {reportSummary.icon} {reportSummary.label}: {reportSummary.value}
+//         </Typography>
+//       </Box>
+
+//       <TableContainer component={Paper} sx={{ boxShadow: 5 }}>
+//         <Table sx={{ minWidth: 650 }} aria-label="lab reports table">
+//           <TableHead>
+//             <TableRow sx={{ backgroundColor: "#B0E0E6", boxShadow: 5 }}>
+//               {["ID", "Reference Number", "Patient Name", "Test Name", "Date", "Status", "Action"].map((header, index) => (
+//                 <TableCell key={index} sx={{ color: "black", fontWeight: "bold" }}>
+//                   {header}
+//                 </TableCell>
+//               ))}
+//             </TableRow>
+//           </TableHead>
+
+//           <TableBody>
+//             {labReportsData.length === 0 ? (
+//               <TableRow>
+//                 <TableCell colSpan={7} sx={{ textAlign: "center", fontStyle: "italic", color: "#808080" }}>
+//                   No Lab Reports Available
+//                 </TableCell>
+//               </TableRow>
+//             ) : (
+//               labReportsData.map((row) => (
+//                 <TableRow key={row.id}>
+//                   <TableCell>{row.id}</TableCell>
+//                   <TableCell>{row.reference_number}</TableCell>
+//                   <TableCell>{row.patient_name}</TableCell>
+//                   <TableCell>{row.test_name}</TableCell>
+//                   <TableCell>{format(new Date(row.report_date), 'MM/dd/yyyy')}</TableCell>
+//                   <TableCell>{row.status}</TableCell>
+//                   <TableCell>
+//                     <Button variant="contained" color="primary" startIcon={<Edit />} sx={{ marginRight: 1 }} onClick={() => navigate(`/add-lab-reports`, { state: row })} />
+//                     <Button variant="contained" color="error" startIcon={<Delete />} onClick={() => handleDelete(row.id)} />
+//                   </TableCell>
+//                 </TableRow>
+//               ))
+//             )}
+//           </TableBody>
+//         </Table>
+//       </TableContainer>
+
+//       <Box mt={3} display="flex" justifyContent="flex-end">
+//         <Button
+//           variant="contained"
+//           sx={{
+//             backgroundColor: '#2B909B',
+//             color: 'white',
+//             fontWeight: "bold",
+//             '&:hover': {
+//               backgroundColor: '#4da6a9',
+//             },
+//           }}
+//           onClick={() => navigate("/add-lab-reports")}
+//         >
+//           Add Report
+//         </Button>
+//       </Box>
+//     </div>
+//   );
+// };
+
+// export default LabReports;
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

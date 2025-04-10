@@ -23,6 +23,8 @@ const AddLabReports = () => {
     }
   }, [location.state]);
 
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
