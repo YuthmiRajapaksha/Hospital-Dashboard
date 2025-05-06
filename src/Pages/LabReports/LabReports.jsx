@@ -1,7 +1,7 @@
 // //workinggggggggggggggggggggggggggggggggggg
 
 import React, { useState, useEffect } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, Box } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, Box,TablePagination } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom"; // Import navigate hook
 import Swal from "sweetalert2";
@@ -15,6 +15,8 @@ const LabReports = () => {
   const [labReportsData, setLabReportsData] = useState([]); // Define the state for lab reports data
   const [lastId, setLastId] = useState(0); // Track the last ID used
   const navigate = useNavigate();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   
 
@@ -35,6 +37,8 @@ const LabReports = () => {
 
     fetchLabReports();
   }, []); // Empty dependency array ensures this runs once when the component mounts
+
+
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -66,14 +70,67 @@ const LabReports = () => {
       }
     });
   };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   return (
     <div>
-      <Box sx={{ textAlign: "center", marginBottom: 5, marginTop: 10 }}>
+      {/* <Box sx={{ textAlign: "center", marginBottom: 5, marginTop: 10 }}>
         <Typography variant="h4" sx={{ fontWeight: "bold", color: "black", fontFamily:"Poppins"}}>
           Finalized Lab Reports
         </Typography>
       </Box>
+      <Box mt={3} display="flex" justifyContent="flex-end">
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: '#2B909B',
+            color: 'white',
+            fontWeight: "bold",
+            '&:hover': {
+              backgroundColor: '#4da6a9',
+            },
+          }}
+          onClick={() => navigate("/add-lab-reports")}
+        >
+          Add Report
+        </Button>
+      </Box> */}
+
+<Box
+  sx={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    mt: 10,
+    mb: 5,
+  }}
+>
+  <Typography variant="h4" sx={{ fontWeight: "bold", color: "black", fontFamily: "Poppins" }}>
+    Finalized Lab Reports
+  </Typography>
+  <Button
+    variant="contained"
+    sx={{
+      backgroundColor: '#2B909B',
+      color: 'white',
+      fontWeight: "bold",
+      '&:hover': {
+        backgroundColor: '#4da6a9',
+      },
+    }}
+    onClick={() => navigate("/add-lab-reports")}
+  >
+    Add Report
+  </Button>
+</Box>
+
 
       <TableContainer component={Paper} sx={{ boxShadow: 5 }}>
         <Table sx={{ minWidth: 650 }} aria-label="lab reports table">
@@ -83,7 +140,7 @@ const LabReports = () => {
                 <TableCell key={index} sx={{ color: "black", fontWeight: "bold" }}>
                   {header}
                 </TableCell>
-              ))}
+              ))} 
             </TableRow>
           </TableHead>
 
@@ -95,7 +152,7 @@ const LabReports = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              labReportsData.map((row) => (
+              labReportsData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                 <TableRow key={row.id}>
                   <TableCell>{row.id}</TableCell>
                   <TableCell>{row.reference_number}</TableCell>
@@ -113,23 +170,16 @@ const LabReports = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
-      <Box mt={3} display="flex" justifyContent="flex-end">
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: '#2B909B',
-            color: 'white',
-            fontWeight: "bold",
-            '&:hover': {
-              backgroundColor: '#4da6a9',
-            },
-          }}
-          onClick={() => navigate("/add-lab-reports")}
-        >
-          Add Report
-        </Button>
-      </Box>
+        
+      <TablePagination
+        component="div"
+        count={labReportsData.length}
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        rowsPerPageOptions={[5, 10, 25]}
+      />
      
     </div>
   );

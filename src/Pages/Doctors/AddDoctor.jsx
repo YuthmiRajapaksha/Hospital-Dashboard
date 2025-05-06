@@ -82,7 +82,6 @@
 
 
     
-
 //     const url = formData.id
 //       ? `http://localhost:3000/api/doctors/update/${formData.id}`
 //       : "http://localhost:3000/api/doctors/add";
@@ -440,7 +439,13 @@ const AddDoctor = () => {
               </Button>
               <Button
                 variant="contained"
-                sx={{ width: "120px", backgroundColor: "#2B909B" }}
+                sx={{ 
+                  width: "120px", 
+                  backgroundColor: "#2B909B",
+                  '&:hover': {
+                    backgroundColor: '#4da6a9',
+                  },  
+                }}
                 onClick={handleSave}
               >
                 {formData.id ? "UPDATE" : "SAVE"}

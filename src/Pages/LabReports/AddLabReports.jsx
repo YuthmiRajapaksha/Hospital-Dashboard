@@ -38,6 +38,8 @@ const AddLabReports = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    
+
     try {
       // Check if it's an update or a new report
       if (report.id) {
@@ -90,6 +92,14 @@ const AddLabReports = () => {
       status: "",
     });
   };
+
+  const handleStatusChange = (e) => {
+    setReport((prevReport) => ({
+      ...prevReport,
+      status: e.target.value,
+    }));
+  };
+  
 
   return (
     <Box display="flex" justifyContent="center" mt={10}>
@@ -146,7 +156,8 @@ const AddLabReports = () => {
               <InputLabel>Status</InputLabel>
               <Select
                 value={report.status}
-                onChange={(e) => setReport({ ...report, status: e.target.value })}
+                // onChange={(e) => setReport({ ...report, status: e.target.value })}
+                onChange={handleStatusChange}
               >
                 <MenuItem value="Pending">Pending</MenuItem>
                 <MenuItem value="In Progress">In Progress</MenuItem>
@@ -175,7 +186,12 @@ const AddLabReports = () => {
             <Button
               variant="contained"
               onClick={handleSubmit}
-              sx={{ backgroundColor: "#2B909B", width: "100px" }}
+              sx={{ 
+                    backgroundColor: "#2B909B", width: "100px", 
+                    '&:hover': {
+                    backgroundColor: '#4da6a9',
+                    },  
+              }}
             >
               SAVE
             </Button>
