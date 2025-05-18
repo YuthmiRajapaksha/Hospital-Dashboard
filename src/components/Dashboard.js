@@ -190,82 +190,262 @@
 
 
 
+// import React, { useState, useEffect } from "react";
+// import { Box, Grid, Paper, Typography, CircularProgress } from "@mui/material";
+// import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+// import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+// import SummarizeIcon from '@mui/icons-material/Summarize';
+// import Charts from "./Charts";
+
+// const today = new Date().toLocaleDateString();
+// const [loading, setLoading] = useState(true);
+
+
+// const Dashboard = () => {
+//   const [stats, setStats] = useState([
+//     { label: "Total Appointments", value: "0", date: today, icon: <CalendarMonthIcon /> },
+//     { label: "Total Payment", value: "0", date: today, icon: <MonetizationOnIcon /> },
+//     { label: "Total Lab Reports", value: "0", date: today, icon: <SummarizeIcon /> },
+//   ]);
+
+//   useEffect(() => {
+//     const fetchStats = async () => {
+//       try {
+//         // Fetch appointments
+//         const appointmentsRes = await fetch("http://localhost:3000/api/appointments");
+//         const appointmentsData = await appointmentsRes.json();
+//         const appointmentsCount = Array.isArray(appointmentsData) ? appointmentsData.length : 0;
+
+//         // Fetch payments
+//         const paymentsRes = await fetch("http://localhost:3000/api/payments");
+//         const paymentsData = await paymentsRes.json();
+//         const paymentsTotal = paymentsData.totalAmount || 0;
+
+//         // Fetch lab reports
+//         const labReportsRes = await fetch("http://localhost:3000/api/lab-reports");
+//         const labReportsData = await labReportsRes.json();
+//         console.log("Fetched Lab Reports:", labReportsData); // 🔍 Add this line
+//         const labReportsCount = Array.isArray(labReportsData) ? labReportsData.length : 0;
+
+//         setStats([
+//           {
+//             label: "Total Appointments",
+//             value: formatCount(appointmentsCount),
+//             date: today,
+//             icon: <CalendarMonthIcon />,
+//           },
+//           {
+//             label: "Total Payment",
+//             value: formatCount(paymentsTotal),
+//             date: today,
+//             icon: <MonetizationOnIcon />,
+//           },
+//           {
+//             label: "Total Lab Reports",
+//             value: formatCount(labReportsCount),
+//             date: today,
+//             icon: <SummarizeIcon />,
+//           },
+//         ]);
+//       } catch (error) {
+//         console.error("Error fetching stats:", error);
+//       }
+//     };
+
+//     fetchStats();
+//   }, []);
+
+//   const formatCount = (count) => {
+//     if (count >= 1000000) {
+//       return `${(count / 1000000).toFixed(2)}M`;
+//     } else if (count >= 1000) {
+//       return `${(count / 1000).toFixed(1)}K`;
+//     }
+//     return count.toString();
+//   };
+
+//   return (
+//     <Box sx={{ flexGrow: 1, p: 3, mt: 3 }}>
+//       <Grid container spacing={2}>
+//         {stats.map((stat, index) => (
+//           <Grid item xs={12} sm={4} key={index}>
+//             <Paper
+//               sx={{
+//                 p: 3,
+//                 height: 120,
+//                 backgroundColor: "#4da6a9",
+//                 color: "white",
+//                 textAlign: "center",
+//                 fontWeight: "bold",
+//                 mt: 2,
+//                 boxShadow: 10,
+//                 borderRadius: 2,
+//                 display: "flex",
+//                 flexDirection: "column",
+//                 justifyContent: "center",
+//                 alignItems: "center",
+//                 "& *": {
+//                   fontFamily: "Poppins",
+//                 },
+//               }}
+//               elevation={3}
+//             >
+//               <Typography variant="h6" sx={{ display: "flex", alignItems: "center", fontSize: 25 }}>
+//                 {stat.icon}
+//                 <span style={{ marginLeft: 8 }}>{stat.label}</span>
+//               </Typography>
+//               <Typography variant="body2" sx={{ mt: 1, fontSize: 18 }}>
+//                 {stat.date}
+//               </Typography>
+//               <Typography variant="h4" sx={{ mt: 1, fontSize: 30, fontWeight: "bold" }}>
+//                 {stat.value}
+//               </Typography>
+//             </Paper>
+//           </Grid>
+//         ))}
+//       </Grid>
+//       <Charts />
+//     </Box>
+//   );
+// };
+
+// export default Dashboard;
+
+
+
+
+
+
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Paper, Typography } from "@mui/material";
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import SummarizeIcon from '@mui/icons-material/Summarize';
+import {
+  Box,
+  Grid,
+  Paper,
+  Typography,
+  CircularProgress
+} from "@mui/material";
+import { TablePagination } from '@mui/material';
+
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import SummarizeIcon from "@mui/icons-material/Summarize";
 import Charts from "./Charts";
+import { getLabReportsToday } from "../Service/labReport";
 
 const today = new Date().toLocaleDateString();
 
+const formatCount = (count) => {
+  if (typeof count !== "number") return "0";
+  if (count >= 1000000) return `${(count / 1000000).toFixed(2)}M`;
+  if (count >= 1000) return `${(count / 1000).toFixed(1)}K`;
+  return count.toString();
+};
+
 const Dashboard = () => {
+  const [loading, setLoading] = useState(true);
+  const [count, setCount] = useState(null);
   const [stats, setStats] = useState([
-    { label: "Total Appointments", value: "0", date: today, icon: <CalendarMonthIcon /> },
-    { label: "Total Payment", value: "0", date: today, icon: <MonetizationOnIcon /> },
-    { label: "Total Lab Reports", value: "0", date: today, icon: <SummarizeIcon /> },
+    {
+      label: "Total Appointments",
+      value: "Loading...",
+      date: today,
+      icon: <CalendarMonthIcon />
+    },
+    {
+      label: "Total Payment",
+      value: "Loading...",
+      date: today,
+      icon: <MonetizationOnIcon />
+    },
+    {
+      label: "Lab Reports",
+      value: "Loading...",
+      date: today,
+      icon: <SummarizeIcon />
+    }
   ]);
 
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        // Fetch appointments
-        const appointmentsRes = await fetch("http://localhost:3000/api/appointments");
-        const appointmentsData = await appointmentsRes.json();
-        const appointmentsCount = Array.isArray(appointmentsData) ? appointmentsData.length : 0;
-
-        // Fetch payments
-        const paymentsRes = await fetch("http://localhost:3000/api/payments");
-        const paymentsData = await paymentsRes.json();
-        const paymentsTotal = paymentsData.totalAmount || 0;
-
-        // Fetch lab reports
-        const labReportsRes = await fetch("http://localhost:3000/api/lab-reports");
-        const labReportsData = await labReportsRes.json();
-        console.log("Fetched Lab Reports:", labReportsData); // 🔍 Add this line
-        const labReportsCount = Array.isArray(labReportsData) ? labReportsData.length : 0;
-
-        setStats([
-          {
-            label: "Total Appointments",
-            value: formatCount(appointmentsCount),
-            date: today,
-            icon: <CalendarMonthIcon />,
-          },
-          {
-            label: "Total Payment",
-            value: formatCount(paymentsTotal),
-            date: today,
-            icon: <MonetizationOnIcon />,
-          },
-          {
-            label: "Total Lab Reports",
-            value: formatCount(labReportsCount),
-            date: today,
-            icon: <SummarizeIcon />,
-          },
-        ]);
-      } catch (error) {
-        console.error("Error fetching stats:", error);
-      }
+    const fetchData = async () => {
+      const data = await getLabReportsToday();
+      setCount(data.count);
     };
-
-    fetchStats();
+    fetchData();
   }, []);
 
-  const formatCount = (count) => {
-    if (count >= 1000000) {
-      return `${(count / 1000000).toFixed(2)}M`;
-    } else if (count >= 1000) {
-      return `${(count / 1000).toFixed(1)}K`;
-    }
-    return count.toString();
-  };
+   useEffect(() => {
+   setStats([{
+      label: "Total Appointments",
+      value: "Loading...",
+      date: today,
+      icon: <CalendarMonthIcon />
+    },
+    {
+      label: "Total Payment",
+      value: "Loading...",
+      date: today,
+      icon: <MonetizationOnIcon />
+    },
+    {
+      label: "Lab Reports",
+      value: count,
+      date: today,
+      icon: <SummarizeIcon />
+    }])
+  }, [count]);
+  
+//   const fetchStats = async () => {
+//     setLoading(true);
+
+//     try {
+//       const appointmentsRes = await fetch("http://localhost:3000/api/appointments");
+//       const appointmentsData = await appointmentsRes.json();
+//       const appointmentsCount = Array.isArray(appointmentsData) ? appointmentsData.length : 0;
+
+//       const paymentsRes = await fetch("http://localhost:3000/api/payments");
+//       const paymentsData = await paymentsRes.json();
+//       const paymentsTotal = paymentsData.totalAmount || 0;
+
+//       const labReportsRes = await fetch("http://localhost:3000/api/lab-reports/count");
+//       const labReportsData = await labReportsRes.json();
+//       const labReportsTotalCount = labReportsData.count || 0;
+
+//       const labReportsTodayRes = await fetch("http://localhost:3000/api/lab-reports/count-today");
+//       const labReportsTodayData = await labReportsTodayRes.json();
+//       const labReportsTodayCount = labReportsTodayData.count || 0;
+// console.log("lab count",labReportsTodayRes);
+//       setStats((prevStats) =>
+//         prevStats.map((stat) => {
+//           if (stat.label === "Total Appointments") {
+//             return { ...stat, value: formatCount(appointmentsCount) };
+//           }
+//           if (stat.label === "Total Payment") {
+//             return { ...stat, value: formatCount(paymentsTotal) };
+//           }
+//           if (stat.label === "Lab Reports") {
+//             return {
+//               ...stat,
+//               value: `${labReportsTodayCount} today / ${formatCount(labReportsTotalCount)} total`
+//             };
+//           }
+//           return stat;
+//         })
+//       );
+//     } catch (error) {
+//       console.error("Error fetching stats:", error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchStats();
+//   }, []);
 
   return (
     <Box sx={{ flexGrow: 1, p: 3, mt: 3 }}>
       <Grid container spacing={2}>
-        {stats.map((stat, index) => (
+        {/* {stats.map((stat, index) => (
           <Grid item xs={12} sm={4} key={index}>
             <Paper
               sx={{
@@ -283,31 +463,91 @@ const Dashboard = () => {
                 justifyContent: "center",
                 alignItems: "center",
                 "& *": {
-                  fontFamily: "Poppins",
-                },
+                  fontFamily: "Poppins"
+                }
               }}
               elevation={3}
             >
-              <Typography variant="h6" sx={{ display: "flex", alignItems: "center", fontSize: 25 }}>
+              <Typography
+                variant="h6"
+                sx={{ display: "flex", alignItems: "center", fontSize: 25 }}
+              >
                 {stat.icon}
                 <span style={{ marginLeft: 8 }}>{stat.label}</span>
               </Typography>
               <Typography variant="body2" sx={{ mt: 1, fontSize: 18 }}>
                 {stat.date}
               </Typography>
-              <Typography variant="h4" sx={{ mt: 1, fontSize: 30, fontWeight: "bold" }}>
-                {stat.value}
-              </Typography>
+              {loading ? (
+                <CircularProgress size={28} sx={{ mt: 1, color: "white" }} />
+              ) : (
+                <Typography
+                  variant="h4"
+                  sx={{ mt: 1, fontSize: 30, fontWeight: "bold" }}
+                >
+                  {stat.value}
+                </Typography>
+              )}
             </Paper>
           </Grid>
-        ))}
+        ))} */}
+
+        {stats?.map((stat, index) => (
+  <Grid item xs={12} sm={4} key={index}>
+    <Paper
+      sx={{
+        p: 3,
+        height: 120,
+        backgroundColor: "#4da6a9",
+        color: "white",
+        textAlign: "center",
+        fontWeight: "bold",
+        mt: 2,
+        boxShadow: 10,
+        borderRadius: 2,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        "& *": {
+          fontFamily: "Poppins",
+        },
+      }}
+      elevation={3}
+    >
+      <Typography variant="h6" sx={{ display: "flex", alignItems: "center", fontSize: 25 }}>
+        {stat.icon}
+        <span style={{ marginLeft: 8 }}>{stat.label}</span>
+      </Typography>
+      <Typography variant="body2" sx={{ mt: 1, fontSize: 18 }}>
+        {stat.date}
+      </Typography>
+
+      {stat.value === "Loading..." ? (
+        <Box sx={{ mt: 1 }}>
+          <CircularProgress color="inherit" size={28} />
+        </Box>
+      ) : (
+        <Typography variant="h4" sx={{ mt: 1, fontSize: 30, fontWeight: "bold" }}>
+          {stat.value}
+        </Typography>
+      )}
+    </Paper>
+  </Grid>
+))}
+
       </Grid>
+
       <Charts />
     </Box>
   );
 };
 
 export default Dashboard;
+
+
+
+
 
 
 
